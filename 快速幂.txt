@@ -1,0 +1,25 @@
+//快速幂基于a^b%c = ((a%c)^b)%c 防爆long long
+#include <stdio.h>
+int main()
+{
+    int T;
+    scanf("%d",&T);
+    while(T)
+    {
+        int n, b;
+        int ans = 1;
+        scanf("%d",&n);
+        b = n;
+        n = n%10;
+        while(b>0)//这个循环时间复杂度logn（解决超时的好方法）
+        {
+            if(b&1)//判断奇数
+                ans = (ans*n)%10;
+            n = (n*n)%10;//如果是快速乘可以把乘号换成加号
+            b = b/2;//这里也可以写成b<<1表示移位运算，相当于除2
+        }
+        printf("%d\n",ans);
+        T--;
+    }
+    return 0;
+}
