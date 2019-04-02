@@ -1,63 +1,67 @@
 #include <iostream>
-#include <string.h>
+#include <cstring>
 using namespace std;
-const static int N = 500005;
-int nxt[N];
-char a[N], b[N];
-void kmp()//get pre[N],just like b[N] kmp itself
+const static int maxn = 1000000+10;
+const static int maxm = 10000+10;
+int a[maxn];
+int b[maxm];
+int nxt[maxm];
+int n, m;
+int main()
 {
-    int len = strlen(b);
-    for(int i=1; i<len; i++)
+    int t;
+    cin>>t;
+    while(t--)
     {
-        int j = i;
-        while(j > 0)
+        memset(a, 0, sizeof(a));
+        memset(b, 0, sizeof(b));
+        memset(nxt, 0, sizeof(nxt));
+        cin>>n>>m;
+        int ans = -1;
+        for(int i=0; i<n; i++)
         {
-            j = nxt[j];
-            if(b[i] == b[j])
+            cin>>a[i];
+        }
+        for(int i=0; i<m; i++)
+        {
+            cin>>b[i];
+        }
+        for(int i=1; i<m; i++)
+        {
+            int j = i;
+            while(j > 0)
             {
-                nxt[i+1] = j+1;
+                j = nxt[j];
+                if(b[j] == b[i])
+                {
+                    nxt[i+1] = j+1;
+                    break;
+                }
+            }
+        }
+        for(int i = 0, j = 0; i < n; i++)
+        {
+            if(j < m && a[i] == b[j])
+                j++;
+            else
+            {
+                while(j > 0)
+                {
+                    j = nxt[j];
+                    if(a[i] == b[j])
+                    {
+                        j++;
+                        break;
+                    }
+                }
+            }
+            if(j == m)
+            {
+                ans = i-m+2;
                 break;
             }
         }
+        cout<<ans<<endl;
     }
-}
-int main()
-{
-    ios::sync_with_stdio(false);
-    cin>>a;
-    int cnt0 = 0, cnt1 = 0;
-    for(int i=0; i<strlen(a); i++)
-    {
-        if(a[i] == '0')
-            cnt0++;
-        else
-            cnt1++;
-    }
-    cin>>b;
-    kmp();
-    int n = strlen(b);
-    /*for(int i=0; i<=n; i++)
-    {
-        cout<<nxt[i]<<endl;
-    }*/
-    for(int j=0; cnt0&&cnt1; j++)
-    {
-        if(b[j] == '0')
-        {
-            cout<<"0";
-            cnt0--;
-        }
-        else
-        {
-            cout<<"1";
-            cnt1--;
-        }
-        if(j == n-1)
-            j = nxt[j+1]-1;
-    }
-    while(cnt0--)
-        cout<<"0";
-    while(cnt1--)
-        cout<<"1";
     return 0;
 }
